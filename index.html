@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cómo crear sistemas de IA con Claude Code · Rewatch · Nexum Academy</title>
+<meta name="description" content="Rewatch exclusivo de la masterclass: cómo crear apps de IA con Claude Code y venderlas por 1.500 a 3.000 USD/mes. Nexum Academy." />
+<meta name="robots" content="noindex, nofollow" />
+<meta property="og:title" content="Cómo crear sistemas de IA con Claude Code" />
+<meta property="og:description" content="El sistema para crear apps de IA y venderlas por 1.500 a 3.000 USD/mes · Rewatch exclusivo" />
+<meta property="og:type" content="website" />
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #14141f;
+    --bg-tertiary: #1c1c2a;
+    --purple: #8943E3;
+    --magenta: #F239FF;
+    --gradient-brand: linear-gradient(135deg, #8943E3 0%, #F239FF 100%);
+    --text-primary: #FFFFFF;
+    --text-secondary: #B8B8C7;
+    --text-tertiary: #6B6B7A;
+    --success: #00D9A3;
+    --warning: #FFB800;
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-medium: rgba(255, 255, 255, 0.15);
+    --font-sans: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+  }
+
+  ::selection { background: var(--magenta); color: var(--bg-primary); }
+
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  /* ============== HEADER ============== */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(10, 10, 15, 0.8);
+    backdrop-blur: 20px;
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+    gap: 16px;
+  }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+  }
+  .logo img {
+    height: 32px;
+    width: auto;
+    display: block;
+  }
+  .footer .logo img { height: 36px; opacity: 0.65; transition: opacity 200ms ease; }
+  .footer .logo:hover img { opacity: 0.9; }
+  @media (max-width: 768px) {
+    .logo img { height: 26px; }
+  }
+  .header-countdown {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .header-countdown__label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-tertiary);
+    font-weight: 600;
+  }
+  .header-countdown__value {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--warning);
+  }
+
+  @media (max-width: 768px) {
+    .header__inner { padding: 14px 20px; }
+  }
+
+  /* ============== HERO ============== */
+  .hero {
+    padding: 44px 0 40px;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .hero__shader {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.55;
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 35%, black 30%, transparent 85%);
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 35%, black 30%, transparent 85%);
+  }
+  .hero__shader canvas { display: block; width: 100% !important; height: 100% !important; }
+  .hero__shader::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 0%, rgba(10,10,15,0.35) 70%, var(--bg-primary) 100%);
+    pointer-events: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero__shader { display: none; }
+  }
+  .hero__inner { text-align: center; position: relative; }
+  .pre-headline {
+    color: var(--magenta);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: 12px;
+  }
+  .h1 {
+    font-weight: 900;
+    font-size: clamp(30px, 4.6vw, 52px);
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+    max-width: 820px;
+    margin: 0 auto 16px;
+  }
+  .gradient-text {
+    background: var(--gradient-brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+  .claude-text {
+    color: #E8946B;
+    white-space: nowrap;
+    text-shadow: 0 0 16px rgba(217, 119, 87, 0.55), 0 0 38px rgba(217, 119, 87, 0.30);
+  }
+  .hero__sub {
+    color: var(--text-secondary);
+    font-size: clamp(15px, 1.8vw, 18px);
+    max-width: 620px;
+    margin: 0 auto 24px;
+    line-height: 1.45;
+  }
+  .hero__cta-prompt {
+    font-size: clamp(20px, 2.4vw, 26px);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 8px 0 24px;
+    letter-spacing: -0.015em;
+    line-height: 1.3;
+  }
+  .video-wrap {
+    max-width: 1024px;
+    margin: 0 auto 32px;
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border-medium);
+    box-shadow: 0 0 80px rgba(137, 67, 227, 0.15);
+    aspect-ratio: 16 / 9;
+    background: #000;
+    transition: box-shadow 300ms ease;
+  }
+  .video-wrap:hover { box-shadow: 0 0 120px rgba(137, 67, 227, 0.3); }
+  .video-wrap iframe { width: 100%; height: 100%; border: 0; }
+  .video-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    background: linear-gradient(135deg, #14141f 0%, #1c1c2a 100%);
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+  .video-placeholder i { width: 48px; height: 48px; color: var(--purple); }
+
+  /* ============== CTAs ============== */
+  .cta-row {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-weight: 700;
+    border-radius: 12px;
+    padding: 16px 32px;
+    font-size: 16px;
+    transition: transform 200ms ease, box-shadow 300ms ease, background 200ms ease;
+    white-space: nowrap;
+  }
+  .btn i { width: 18px; height: 18px; }
+  .btn--primary {
+    background: var(--gradient-brand);
+    color: white;
+    box-shadow: 0 0 40px rgba(137, 67, 227, 0.4);
+    font-size: 18px;
+    padding: 18px 36px;
+  }
+  .btn--primary:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 0 60px rgba(242, 57, 255, 0.55);
+  }
+  .btn--secondary {
+    background: transparent;
+    color: var(--text-primary);
+    border: 1.5px solid var(--purple);
+    font-weight: 600;
+  }
+  .btn--secondary:hover {
+    background: rgba(137, 67, 227, 0.1);
+    border-color: var(--magenta);
+  }
+  .btn--xl {
+    font-size: 22px;
+    font-weight: 800;
+    padding: 24px 48px;
+    box-shadow: 0 0 80px rgba(137, 67, 227, 0.5);
+  }
+  .btn--xl:hover { box-shadow: 0 0 120px rgba(242, 57, 255, 0.6); }
+
+  .trust {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-tertiary);
+    font-size: 14px;
+    margin-top: 24px;
+  }
+  .trust i { width: 14px; height: 14px; }
+
+  @media (max-width: 640px) {
+    .cta-row { flex-direction: column; align-items: stretch; }
+    .btn { width: 100%; }
+  }
+
+  /* ============== SECTION COMMON ============== */
+  section { padding: 96px 0; position: relative; }
+  .section-header { text-align: center; margin-bottom: 64px; }
+  .h2 {
+    font-weight: 800;
+    font-size: clamp(32px, 5vw, 48px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .h2--small {
+    font-size: clamp(13px, 1.4vw, 14px);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--magenta);
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .section-sub {
+    color: var(--text-secondary);
+    font-size: 18px;
+    max-width: 640px;
+    margin: 16px auto 0;
+  }
+
+  /* ============== RECAP ============== */
+  .recap-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .recap-card {
+    position: relative;
+    background: linear-gradient(180deg, rgba(20, 20, 31, 0.85) 0%, rgba(28, 28, 42, 0.55) 100%);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+    padding: 36px 32px 40px;
+    overflow: hidden;
+    isolation: isolate;
+    transition: transform 350ms cubic-bezier(0.2, 0.8, 0.2, 1), border-color 300ms ease, box-shadow 350ms ease;
+  }
+  .recap-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gradient-brand);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 400ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .recap-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 100% 0%, rgba(242, 57, 255, 0.08) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 400ms ease;
+    pointer-events: none;
+    z-index: -1;
+  }
+  .recap-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(137, 67, 227, 0.4);
+    box-shadow: 0 24px 60px -20px rgba(137, 67, 227, 0.35);
+  }
+  .recap-card:hover::before { transform: scaleX(1); }
+  .recap-card:hover::after { opacity: 1; }
+
+  .recap-card__num {
+    position: absolute;
+    bottom: -28px;
+    right: -8px;
+    font-family: var(--font-sans);
+    font-weight: 900;
+    font-size: 160px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    background: linear-gradient(180deg, rgba(137, 67, 227, 0.14) 0%, transparent 75%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    pointer-events: none;
+    transition: transform 500ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    z-index: 0;
+  }
+  .recap-card:hover .recap-card__num {
+    transform: translateY(-4px) translateX(-4px);
+    background: linear-gradient(180deg, rgba(242, 57, 255, 0.22) 0%, transparent 70%);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  .recap-card__icon {
+    position: relative;
+    z-index: 1;
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(137, 67, 227, 0.18) 0%, rgba(242, 57, 255, 0.12) 100%);
+    border: 1px solid rgba(137, 67, 227, 0.35);
+    display: grid;
+    place-items: center;
+    margin-bottom: 28px;
+    box-shadow: 0 0 0 0 rgba(137, 67, 227, 0);
+    transition: all 350ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .recap-card__icon i {
+    width: 26px;
+    height: 26px;
+    color: var(--purple);
+    transition: color 300ms ease, transform 350ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .recap-card:hover .recap-card__icon {
+    background: var(--gradient-brand);
+    border-color: transparent;
+    box-shadow: 0 0 32px rgba(242, 57, 255, 0.5);
+    transform: rotate(-3deg) scale(1.05);
+  }
+  .recap-card:hover .recap-card__icon i { color: white; transform: rotate(3deg); }
+
+  .recap-card h3 {
+    position: relative;
+    z-index: 1;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 14px;
+  }
+  .recap-card p {
+    position: relative;
+    z-index: 1;
+    color: var(--text-secondary);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 900px) { .recap-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 768px) {
+    .recap-card { padding: 32px 28px 36px; }
+    .recap-card__num { font-size: 130px; bottom: -22px; right: -6px; }
+  }
+
+  /* ============== BONUSES PUNCHY ============== */
+  .bonuses { position: relative; overflow: hidden; }
+  .bonuses::before {
+    content: '';
+    position: absolute;
+    top: 30%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 900px; height: 700px;
+    background: radial-gradient(circle, rgba(242, 57, 255, 0.07) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .bonuses .container { position: relative; z-index: 1; }
+
+  .pulse-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--magenta);
+    margin-right: 10px;
+    vertical-align: middle;
+    position: relative;
+    animation: pulseDot 2s ease-out infinite;
+  }
+  .pulse-dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--magenta);
+    animation: pulseRing 2s ease-out infinite;
+    pointer-events: none;
+  }
+  @keyframes pulseDot {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+  }
+  @keyframes pulseRing {
+    0% { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(3.2); opacity: 0; }
+  }
+
+  .bonus-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  .bonus-card {
+    position: relative;
+    background: linear-gradient(180deg, rgba(28, 28, 42, 0.92) 0%, rgba(20, 20, 31, 0.7) 100%);
+    border: 1.5px solid rgba(137, 67, 227, 0.25);
+    border-radius: 22px;
+    padding: 32px;
+    overflow: hidden;
+    isolation: isolate;
+    transition: transform 450ms cubic-bezier(0.2, 0.8, 0.2, 1), border-color 300ms ease, box-shadow 400ms ease;
+  }
+  .bonus-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--gradient-brand);
+    opacity: 0.45;
+    transition: opacity 300ms ease;
+  }
+  .bonus-card::after {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle at center, rgba(242, 57, 255, 0.18) 0%, transparent 65%);
+    opacity: 0.4;
+    transition: opacity 400ms ease;
+    pointer-events: none;
+    z-index: -1;
+  }
+  .bonus-card:hover {
+    transform: translateY(-8px) rotate(-0.4deg);
+    border-color: rgba(242, 57, 255, 0.55);
+    box-shadow: 0 28px 64px -18px rgba(137, 67, 227, 0.5);
+  }
+  .bonus-card:hover::before { opacity: 1; }
+  .bonus-card:hover::after { opacity: 1; }
+
+  .bonus-card__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .bonus-card__icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(137, 67, 227, 0.22) 0%, rgba(242, 57, 255, 0.16) 100%);
+    border: 1px solid rgba(137, 67, 227, 0.4);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    transition: all 350ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .bonus-card__icon i {
+    width: 26px;
+    height: 26px;
+    color: var(--magenta);
+    transition: color 300ms ease, transform 350ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .bonus-card:hover .bonus-card__icon {
+    background: var(--gradient-brand);
+    border-color: transparent;
+    box-shadow: 0 0 32px rgba(242, 57, 255, 0.55);
+    transform: rotate(-4deg) scale(1.05);
+  }
+  .bonus-card:hover .bonus-card__icon i { color: white; transform: rotate(4deg); }
+
+  .bonus-card__value { text-align: right; flex-shrink: 0; }
+  .bonus-card__value-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--text-tertiary);
+    margin-bottom: 4px;
+  }
+  .bonus-card__value-amount {
+    display: block;
+    font-family: var(--font-sans);
+    font-weight: 900;
+    font-size: 26px;
+    letter-spacing: -0.025em;
+    line-height: 1;
+    background: var(--gradient-brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  .bonus-card__num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--text-tertiary);
+    margin-bottom: 10px;
+  }
+
+  .bonus-card h3 {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin: 0 0 14px;
+    padding-right: 0;
+  }
+  .bonus-card p {
+    color: var(--text-secondary);
+    font-size: 15.5px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .bonus-card__footer {
+    padding-top: 18px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.08);
+  }
+  .bonus-card__footer-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--success);
+    background: rgba(0, 217, 163, 0.1);
+    border: 1px solid rgba(0, 217, 163, 0.3);
+    padding: 7px 13px;
+    border-radius: 999px;
+  }
+  .bonus-card__footer-tag i { width: 13px; height: 13px; }
+
+  /* Featured (Bonus 4) */
+  .bonus-card--featured {
+    border-color: rgba(242, 57, 255, 0.55);
+    background: linear-gradient(180deg, rgba(50, 22, 78, 0.92) 0%, rgba(28, 18, 50, 0.78) 100%);
+    box-shadow: 0 12px 40px -12px rgba(242, 57, 255, 0.35);
+  }
+  .bonus-card--featured::before { opacity: 1; height: 4px; }
+  .bonus-card--featured::after { opacity: 0.85; }
+  .bonus-card--featured .bonus-card__icon {
+    background: var(--gradient-brand);
+    border-color: transparent;
+    box-shadow: 0 0 24px rgba(242, 57, 255, 0.4);
+  }
+  .bonus-card--featured .bonus-card__icon i { color: white; }
+  .bonus-card__ribbon {
+    position: absolute;
+    top: 22px;
+    right: -56px;
+    background: var(--gradient-brand);
+    color: white;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    padding: 7px 60px;
+    transform: rotate(35deg);
+    z-index: 3;
+    box-shadow: 0 6px 20px rgba(242, 57, 255, 0.45);
+  }
+
+  /* Total — savings display */
+  .bonus-total {
+    margin-top: 24px;
+    padding: 48px 32px 40px;
+    border-radius: 24px;
+    border: 1.5px solid rgba(242, 57, 255, 0.3);
+    background: linear-gradient(135deg, rgba(137, 67, 227, 0.1) 0%, rgba(242, 57, 255, 0.06) 100%);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+  .bonus-total::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(242, 57, 255, 0.1) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .bonus-total__grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    max-width: 880px;
+    margin: 0 auto;
+  }
+  .bonus-total__sep {
+    color: var(--text-tertiary);
+    font-size: 28px;
+    font-weight: 200;
+    line-height: 1;
+  }
+  .bonus-total__col { text-align: center; }
+  .bonus-total__label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--text-tertiary);
+    margin-bottom: 10px;
+  }
+  .bonus-total__amount {
+    font-family: var(--font-sans);
+    font-weight: 900;
+    font-size: clamp(28px, 4vw, 44px);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    display: block;
+  }
+  .bonus-total__amount--strike {
+    color: var(--text-tertiary);
+    text-decoration: line-through;
+    font-weight: 700;
+    font-size: clamp(24px, 3.4vw, 36px);
+  }
+  .bonus-total__amount--save {
+    background: linear-gradient(135deg, var(--success) 0%, #5BFFD0 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+  .bonus-total__hint-bar {
+    margin-top: 28px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-tertiary);
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .bonus-total__hint-bar i { width: 14px; height: 14px; color: var(--warning); }
+
+  @media (max-width: 768px) {
+    .bonus-grid { grid-template-columns: 1fr; gap: 20px; }
+    .bonus-card { padding: 28px 24px; }
+    .bonus-card__head { gap: 12px; }
+    .bonus-card__value-amount { font-size: 22px; }
+    .bonus-card__ribbon { font-size: 9px; padding: 6px 50px; right: -50px; top: 18px; }
+    .bonus-total { padding: 36px 20px 32px; }
+    .bonus-total__grid { grid-template-columns: 1fr; gap: 24px; }
+    .bonus-total__sep { display: none; }
+  }
+
+  /* ============== GUARANTEE ============== */
+  .guarantee {
+    max-width: 720px;
+    margin: 0 auto;
+    background: linear-gradient(135deg, rgba(0, 217, 163, 0.06) 0%, transparent 100%);
+    border: 1px solid rgba(0, 217, 163, 0.2);
+    border-radius: 24px;
+    padding: 56px 48px;
+    text-align: center;
+  }
+  .guarantee i {
+    width: 56px;
+    height: 56px;
+    color: var(--success);
+    margin-bottom: 24px;
+  }
+  .guarantee h2 {
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+    line-height: 1.15;
+  }
+  .guarantee p {
+    color: var(--text-secondary);
+    font-size: 17px;
+    max-width: 540px;
+    margin: 0 auto 16px;
+  }
+  .guarantee p:last-child { color: var(--text-primary); font-weight: 600; }
+
+  @media (max-width: 640px) { .guarantee { padding: 40px 28px; } }
+
+  /* ============== CTA SECTION ============== */
+  .cta-section { text-align: center; }
+  .pricing-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin: 32px 0 40px;
+    font-family: var(--font-mono);
+  }
+  .pricing-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 360px;
+    color: var(--text-secondary);
+    font-size: 16px;
+  }
+  .pricing-row__strike { text-decoration: line-through; color: var(--text-tertiary); }
+  .pricing-big {
+    font-family: var(--font-sans);
+    font-weight: 900;
+    font-size: clamp(48px, 7vw, 72px);
+    letter-spacing: -0.025em;
+    line-height: 1;
+    margin-top: 8px;
+  }
+  .pricing-deadline {
+    color: var(--text-tertiary);
+    font-size: 13px;
+    margin-top: 4px;
+  }
+  .trust-checks {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    margin-top: 32px;
+    color: var(--text-secondary);
+    font-size: 15px;
+  }
+  .trust-checks .row {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .trust-checks i {
+    width: 16px;
+    height: 16px;
+    color: var(--success);
+    flex-shrink: 0;
+  }
+
+  /* ============== FAQ ============== */
+  .faq-list {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .faq-item {
+    background: rgba(20, 20, 31, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 200ms ease;
+  }
+  .faq-item.is-open { border-color: rgba(137, 67, 227, 0.25); }
+  .faq-q {
+    width: 100%;
+    text-align: left;
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .faq-q i {
+    width: 20px;
+    height: 20px;
+    color: var(--purple);
+    transition: transform 300ms ease;
+    flex-shrink: 0;
+  }
+  .faq-item.is-open .faq-q i { transform: rotate(180deg); }
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 400ms ease;
+  }
+  .faq-a__inner {
+    padding: 0 24px 24px;
+    color: var(--text-secondary);
+    font-size: 16px;
+    line-height: 1.65;
+  }
+
+  /* ============== FINAL CTA ============== */
+  .final {
+    text-align: center;
+    padding: 128px 0 96px;
+    position: relative;
+    overflow: hidden;
+  }
+  .final::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(900px, 100%);
+    height: 600px;
+    background: radial-gradient(ellipse, rgba(242, 57, 255, 0.12) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .final::after {
+    content: '';
+    position: absolute;
+    bottom: -40px;
+    left: 16%;
+    width: min(620px, 70%);
+    height: 460px;
+    background: radial-gradient(ellipse, rgba(217, 119, 87, 0.16) 0%, rgba(217, 119, 87, 0.05) 38%, transparent 64%);
+    filter: blur(6px);
+    pointer-events: none;
+    z-index: -1;
+  }
+  .final h2 {
+    font-weight: 900;
+    font-size: clamp(36px, 6vw, 64px);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    max-width: 800px;
+    margin: 0 auto 24px;
+    position: relative;
+  }
+  .final p {
+    color: var(--text-secondary);
+    font-size: 18px;
+    max-width: 580px;
+    margin: 0 auto 48px;
+    position: relative;
+  }
+  .final .btn--xl { position: relative; }
+  .final__sub-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 32px;
+    color: var(--text-secondary);
+    font-size: 15px;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 2px;
+    transition: color 200ms ease, border-color 200ms ease;
+    position: relative;
+  }
+  .final__sub-link:hover { color: var(--text-primary); border-color: var(--purple); }
+  .final__sub-link i { width: 14px; height: 14px; }
+
+  /* ============== FOOTER ============== */
+  .footer {
+    border-top: 1px solid var(--border-subtle);
+    padding: 48px 0;
+    text-align: center;
+    color: var(--text-tertiary);
+    font-size: 14px;
+  }
+  .footer .logo { justify-content: center; opacity: 0.6; margin-bottom: 16px; }
+  .footer a { color: var(--text-secondary); border-bottom: 1px solid var(--border-subtle); }
+  .footer a:hover { color: var(--magenta); }
+
+  /* ============== STICKY MOBILE CTA ============== */
+  .sticky-mobile {
+    display: none;
+  }
+  @media (max-width: 768px) {
+    .sticky-mobile {
+      display: block;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border-subtle);
+      padding: 12px 16px;
+      z-index: 60;
+      transform: translateY(120%);
+      transition: transform 350ms ease;
+    }
+    .sticky-mobile.is-visible { transform: translateY(0); }
+    .sticky-mobile .btn { width: 100%; padding: 14px 20px; font-size: 16px; }
+    body { padding-bottom: 76px; }
+  }
+
+  /* ============== ANIMATIONS ============== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 700ms ease, transform 700ms ease;
+    transition-delay: var(--delay, 0ms);
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+    .reveal { opacity: 1; transform: none; }
+  }
+
+  /* Helper: alt section bg */
+  .bg-alt { background: linear-gradient(180deg, transparent 0%, rgba(20, 20, 31, 0.4) 50%, transparent 100%); }
+
+  /* ============== MOBILE OPTIMIZATIONS (≤ 768px) ============== */
+  @media (max-width: 768px) {
+    /* Tighter vertical rhythm */
+    section { padding: 64px 0; }
+    .hero { padding: 28px 0 32px; }
+    .final { padding: 80px 0 56px; }
+    .section-header { margin-bottom: 40px; }
+
+    /* Container padding (más espacio horizontal en pantallas chicas) */
+    .container { padding: 0 20px; }
+
+    /* Hero text wrapping & spacing */
+    .hero__sub { margin: 0 auto 24px; }
+    .hero__cta-prompt {
+      margin: 16px auto 20px;
+      max-width: 320px;
+      line-height: 1.25;
+    }
+
+    /* Trust line — wrap si no entra, mantener centrado */
+    .trust {
+      flex-wrap: wrap;
+      justify-content: center;
+      text-align: center;
+      max-width: 360px;
+      margin: 20px auto 0;
+      line-height: 1.5;
+    }
+
+    /* CTA xl en final — full-width sin overflow */
+    .btn--xl {
+      font-size: 17px;
+      padding: 18px 24px;
+      width: 100%;
+      box-sizing: border-box;
+      letter-spacing: -0.01em;
+    }
+    .final p { margin-bottom: 32px; }
+
+    /* Recap cards — números más chicos */
+    .recap-card {
+      padding: 28px 24px 32px;
+    }
+    .recap-card__num { font-size: 110px; }
+
+    /* Mid CTA con padding más ajustado */
+    .cta-section .h2 + .section-sub { margin: 16px auto 28px; }
+
+    /* FAQ items */
+    .faq-q { padding: 20px; font-size: 16px; gap: 12px; }
+    .faq-a__inner { padding: 0 20px 20px; font-size: 15px; }
+
+    /* Footer */
+    .footer { padding: 32px 0; }
+
+    /* Video shadow más sutil en mobile (perf) */
+    .video-wrap { box-shadow: 0 0 40px rgba(137, 67, 227, 0.12); }
+  }
+
+  /* ============== EXTRA SMALL (≤ 380px) ============== */
+  @media (max-width: 380px) {
+    .hero__cta-prompt { font-size: 18px; }
+    .h1 { font-size: 36px; }
+    .btn--primary { font-size: 16px; padding: 16px 24px; }
+    .btn--xl { font-size: 16px; padding: 16px 20px; }
+    .recap-card__num { font-size: 90px; bottom: -16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============== HEADER ============== -->
+<header class="header">
+  <div class="header__inner" style="justify-content: center;">
+    <a href="#top" class="logo" aria-label="Nexum Academy">
+      <img src="assets/logo-nexum-academy.svg" alt="Nexum Academy" />
+    </a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============== HERO ============== -->
+  <section class="hero">
+    <div class="hero__shader" id="hero-shader" aria-hidden="true"></div>
+    <div class="container hero__inner">
+      <p class="pre-headline reveal">Rewatch exclusivo · Nexum Academy</p>
+      <h1 class="h1 reveal" style="--delay: 100ms;">Sistemas de IA que generan <span class="gradient-text" style="white-space: nowrap;">5.000 USD/mes</span> con <span class="claude-text">Claude Code</span></h1>
+      <p class="hero__sub reveal" style="--delay: 200ms;">El sistema con el que creamos apps de IA con Claude Code y las vendemos por 1.500 a 3.000 USD/mes de forma recurrente.</p>
+
+      <div class="video-wrap reveal" style="--delay: 300ms;">
+        <iframe id="rewatch-video" src="https://player.vimeo.com/video/1189717119?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="Rewatch · La Gran Oportunidad de 2026"></iframe>
+      </div>
+
+      <p class="hero__cta-prompt reveal" style="--delay: 380ms;">¿Listo para dar <span class="gradient-text">el gran paso</span>?</p>
+
+      <div class="cta-row reveal" style="--delay: 420ms;">
+        <a class="btn btn--primary" href="https://cal.com/team/nexum-ai/nexum-academy-pro?utm_source=skool&amp;utm_medium=organic&amp;utm_campaign=prelanzamiento05/05" target="_blank" rel="noopener">
+          Agenda tu llamada de admisión
+          <i data-lucide="arrow-right"></i>
+        </a>
+      </div>
+
+      <div class="trust reveal" style="--delay: 500ms;">
+        <i data-lucide="clock"></i>
+        <span>Llamada de 30 minutos · Sin compromiso · Con el equipo de Nexum</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== RECAP ============== -->
+  <section class="bg-alt">
+    <div class="container">
+      <div class="section-header reveal">
+        <p class="h2--small">Recap del masterclass</p>
+        <h2 class="h2">Lo que has visto en los últimos 90 minutos</h2>
+      </div>
+      <div class="recap-grid">
+        <article class="recap-card reveal">
+          <span class="recap-card__num">01</span>
+          <div class="recap-card__icon"><i data-lucide="trending-up"></i></div>
+          <h3>La gran oportunidad que nadie está aprovechando</h3>
+          <p>Por qué crear apps de IA con Claude Code y venderlas a negocios es la mayor oportunidad del momento, aunque no sepas programar.</p>
+        </article>
+        <article class="recap-card reveal" style="--delay: 100ms;">
+          <span class="recap-card__num">02</span>
+          <div class="recap-card__icon"><i data-lucide="route"></i></div>
+          <h3>El paso a paso para crear una app de IA</h3>
+          <p>Te mostramos, paso a paso, el proceso repetible con el que creamos las mismas apps de IA que después le vendemos a clientes reales.</p>
+        </article>
+        <article class="recap-card reveal" style="--delay: 200ms;">
+          <span class="recap-card__num">03</span>
+          <div class="recap-card__icon"><i data-lucide="circle-dollar-sign"></i></div>
+          <h3>Cómo venderlas por <span style="white-space: nowrap;">1.500 - 3.000 USD/mes</span></h3>
+          <p>El método para empaquetarlas y venderlas, el mismo con el que estamos agregando 10.000 USD recurrentes a nuestra facturación.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== MID CTA · TENÉS DUDAS ============== -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="reveal" style="text-align: center; max-width: 720px; margin: 0 auto;">
+        <p class="h2--small">¿Tienes dudas?</p>
+        <h2 class="h2">Hablemos <span class="gradient-text">30 minutos</span>.</h2>
+        <p class="section-sub" style="margin: 24px auto 40px;">Una llamada con el equipo de Nexum. Sin compromiso, sin pitch agresivo. Resolvemos lo que tengas dando vueltas y vemos juntos si esto tiene sentido para vos.</p>
+
+        <div class="cta-row" style="justify-content: center;">
+          <a class="btn btn--primary" href="https://cal.com/team/nexum-ai/nexum-academy-pro?utm_source=skool&amp;utm_medium=organic&amp;utm_campaign=prelanzamiento05/05" target="_blank" rel="noopener">
+            Agenda tu llamada de admisión
+            <i data-lucide="arrow-right"></i>
+          </a>
+        </div>
+
+        <div class="trust-checks">
+          <span class="row"><i data-lucide="check"></i>30 minutos · Sin compromiso</span>
+          <span class="row"><i data-lucide="check"></i>Con el equipo de Nexum</span>
+          <span class="row"><i data-lucide="check"></i>100% gratis</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== FAQ ============== -->
+  <section class="bg-alt">
+    <div class="container">
+      <div class="section-header reveal">
+        <h2 class="h2">Preguntas frecuentes</h2>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item reveal">
+          <button class="faq-q" aria-expanded="false">
+            <span>¿Tengo que comprar algo en la llamada?</span>
+            <i data-lucide="chevron-down"></i>
+          </button>
+          <div class="faq-a"><div class="faq-a__inner">No. La llamada es para resolver tus dudas y ver juntos si lo que mostramos en el masterclass tiene sentido para tu situación. Si después querés avanzar, te explicamos cómo. Si no, queda como una buena conversación.</div></div>
+        </div>
+
+        <div class="faq-item reveal" style="--delay: 80ms;">
+          <button class="faq-q" aria-expanded="false">
+            <span>¿Cuánto dura la llamada y quién la atiende?</span>
+            <i data-lucide="chevron-down"></i>
+          </button>
+          <div class="faq-a"><div class="faq-a__inner">30 minutos con el equipo de Nexum. Sin demos enlatadas ni guion de venta, vamos directo a tus preguntas y a tu contexto.</div></div>
+        </div>
+
+        <div class="faq-item reveal" style="--delay: 160ms;">
+          <button class="faq-q" aria-expanded="false">
+            <span>¿Es 100% gratis?</span>
+            <i data-lucide="chevron-down"></i>
+          </button>
+          <div class="faq-a"><div class="faq-a__inner">Sí, 100% gratis. No te pedimos tarjeta, no te suscribimos a nada. Reservás un horario en el calendario, te conectás por Google Meet, charlamos.</div></div>
+        </div>
+
+        <div class="faq-item reveal" style="--delay: 240ms;">
+          <button class="faq-q" aria-expanded="false">
+            <span>¿Y si vivo fuera de Argentina/Uruguay?</span>
+            <i data-lucide="chevron-down"></i>
+          </button>
+          <div class="faq-a"><div class="faq-a__inner">No hay problema. El equipo trabaja con personas de todo el mundo hispanohablante (México, Colombia, España, Perú, Chile, Estados Unidos, etc.). El calendario detecta tu zona horaria automáticamente y te muestra los horarios disponibles en tu hora local.</div></div>
+        </div>
+
+        <div class="faq-item reveal" style="--delay: 320ms;">
+          <button class="faq-q" aria-expanded="false">
+            <span>¿Necesito saber programar para aplicar lo que viste?</span>
+            <i data-lucide="chevron-down"></i>
+          </button>
+          <div class="faq-a"><div class="faq-a__inner">No. Todo el método está pensado para construir con Claude Code describiendo en lenguaje natural lo que necesitás, la herramienta escribe y ejecuta el código por vos. Vos entendés el negocio; Claude Code construye el producto. Es exactamente lo que viste hacer en vivo durante la masterclass.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== FINAL CTA ============== -->
+  <section class="final">
+    <div class="container">
+      <h2 class="reveal">La ventana está abierta. <span class="gradient-text">Por ahora.</span></h2>
+      <p class="reveal" style="--delay: 100ms;">Si algo de lo que viste en el masterclass te resonó, agenda la llamada. Lo charlamos sin compromiso.</p>
+      <a class="btn btn--primary btn--xl reveal" href="https://cal.com/team/nexum-ai/nexum-academy-pro?utm_source=skool&amp;utm_medium=organic&amp;utm_campaign=prelanzamiento05/05" target="_blank" rel="noopener" style="--delay: 200ms;">
+        Agenda tu llamada de admisión
+        <i data-lucide="arrow-right"></i>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============== FOOTER ============== -->
+<footer class="footer">
+  <div class="container">
+    <div class="logo" style="justify-content: center; margin-bottom: 16px;">
+      <img src="assets/logo-nexum-academy.svg" alt="Nexum Academy" />
+    </div>
+    <div>© 2026 Nexum AI · Todos los derechos reservados</div>
+    <div style="margin-top: 8px;"><a href="https://nexumai.online" target="_blank" rel="noopener">nexumai.online</a></div>
+  </div>
+</footer>
+
+<!-- ============== STICKY MOBILE CTA ============== -->
+<div class="sticky-mobile" id="sticky-mobile">
+  <a class="btn btn--primary" href="https://cal.com/team/nexum-ai/nexum-academy-pro?utm_source=skool&amp;utm_medium=organic&amp;utm_campaign=prelanzamiento05/05" target="_blank" rel="noopener">
+    Agenda tu llamada de admisión
+    <i data-lucide="arrow-right"></i>
+  </a>
+</div>
+
+<!-- ============== THREE.JS + LUCIDE ============== -->
+<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  // ===== Init Lucide icons =====
+  lucide.createIcons();
+
+  // ===== Hero shader animation (Three.js) — Nexum brand palette =====
+  (function initHeroShader() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const container = document.getElementById('hero-shader');
+    if (!container || typeof THREE === 'undefined') return;
+
+    const vertexShader = `
+      void main() {
+        gl_Position = vec4(position, 1.0);
+      }
+    `;
+
+    // Brand-adapted fragment shader: 3 layers tinted with violet / purple / magenta
+    const fragmentShader = `
+      #define TWO_PI 6.2831853072
+      #define PI 3.14159265359
+
+      precision highp float;
+      uniform vec2 resolution;
+      uniform float time;
+
+      void main(void) {
+        vec2 uv = (gl_FragCoord.xy * 2.0 - resolution.xy) / min(resolution.x, resolution.y);
+        float t = time * 0.04;
+        float lineWidth = 0.0018;
+
+        vec3 violet  = vec3(0.417, 0.196, 0.701); // #6A32B3
+        vec3 purple  = vec3(0.537, 0.263, 0.890); // #8943E3
+        vec3 magenta = vec3(0.949, 0.224, 1.000); // #F239FF
+
+        vec3 color = vec3(0.0);
+        for(int i = 0; i < 5; i++) {
+          float fi = float(i);
+          float ii = float(i*i);
+          float i0 = lineWidth * ii / abs(fract(t + 0.0  + fi*0.01) * 5.0 - length(uv) + mod(uv.x + uv.y, 0.2));
+          float i1 = lineWidth * ii / abs(fract(t - 0.01 + fi*0.01) * 5.0 - length(uv) + mod(uv.x + uv.y, 0.2));
+          float i2 = lineWidth * ii / abs(fract(t - 0.02 + fi*0.01) * 5.0 - length(uv) + mod(uv.x + uv.y, 0.2));
+          color += violet  * i0;
+          color += purple  * i1;
+          color += magenta * i2;
+        }
+
+        gl_FragColor = vec4(color * 0.85, 1.0);
+      }
+    `;
+
+    const camera = new THREE.Camera();
+    camera.position.z = 1;
+
+    const scene = new THREE.Scene();
+    const geometry = new THREE.PlaneGeometry(2, 2);
+
+    const uniforms = {
+      time: { value: 1.0 },
+      resolution: { value: new THREE.Vector2() },
+    };
+
+    const material = new THREE.ShaderMaterial({ uniforms, vertexShader, fragmentShader });
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    const isMobile = window.innerWidth < 768;
+    const renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: false });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
+    container.appendChild(renderer.domElement);
+
+    function onResize() {
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      renderer.setSize(w, h);
+      uniforms.resolution.value.x = renderer.domElement.width;
+      uniforms.resolution.value.y = renderer.domElement.height;
+    }
+    onResize();
+    window.addEventListener('resize', onResize);
+
+    let rafId = 0;
+    let paused = false;
+    function animate() {
+      if (paused) return;
+      rafId = requestAnimationFrame(animate);
+      uniforms.time.value += 0.05;
+      renderer.render(scene, camera);
+    }
+    document.addEventListener('visibilitychange', () => {
+      paused = document.hidden;
+      if (!paused) animate();
+      else cancelAnimationFrame(rafId);
+    });
+    animate();
+  })();
+
+  // ===== FAQ accordion =====
+  document.querySelectorAll('.faq-q').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const answer = item.querySelector('.faq-a');
+      const isOpen = item.classList.contains('is-open');
+
+      // Close all
+      document.querySelectorAll('.faq-item').forEach((it) => {
+        it.classList.remove('is-open');
+        it.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+        it.querySelector('.faq-a').style.maxHeight = '0px';
+      });
+
+      // Open this one if it was closed
+      if (!isOpen) {
+        item.classList.add('is-open');
+        btn.setAttribute('aria-expanded', 'true');
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+      }
+    });
+  });
+
+  // ===== Reveal on scroll =====
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach((el) => io.observe(el));
+
+  // ===== Sticky mobile CTA (after 50% scroll) =====
+  const stickyMobile = document.getElementById('sticky-mobile');
+  function checkSticky() {
+    const scrolled = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = scrolled / docHeight;
+    if (pct > 0.15) {
+      stickyMobile.classList.add('is-visible');
+    } else {
+      stickyMobile.classList.remove('is-visible');
+    }
+  }
+  window.addEventListener('scroll', checkSticky, { passive: true });
+  checkSticky();
+
+</script>
+
+</body>
+</html>
